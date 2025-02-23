@@ -1,0 +1,58 @@
+class Order:
+    def __init__(self, order_id):
+        self.__order_id = order_id
+        self.__items = []
+
+    def add_item(self, item_name, quantity, price):
+        self.__items.append({
+            "item_name": item_name,
+            "quantity": quantity,
+            "price": price
+        })
+
+    def get_items(self):
+        return self.__items
+
+    def get_order_id(self):
+        return self.__order_id
+
+    def calculate_total(self):
+        total = 0
+        for item in self.__items:
+            total += item["quantity"] * item["price"]
+        return total
+
+    def __str__(self):
+        items_str = "\n".join([f"{item['item_name']} (кількість: {item['quantity']}, ціна: {item['price']} грн)" 
+                               for item in self.__items])
+        return f"Замовлення #{self.__order_id}:\n{items_str}\nЗагальна вартість: {self.calculate_total()} грн"
+
+class Customer:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+
+    def place_order(self, order_id):
+        return Order(order_id)
+
+    def __str__(self):
+        return f"Покупець: {self.name}, Email: {self.email}"
+
+class OrderProcessor:
+    @staticmethod
+    def process_order(order):
+        total_cost = order.calculate_total()
+        print(f"Обробка замовлення #{order.get_order_id()}...")
+        print(order)
+        print(f"Загальна вартість замовлення: {total_cost} грн")
+        print("Замовлення успішно оброблено!\n")
+
+customer = Customer("Іван Петренко", "ivan.petrenko@example.com")
+print(customer)
+
+order = customer.place_order(123)
+order.add_item("Ноутбук", 1, 25000)
+order.add_item("Мишка", 2, 500)
+order.add_item("Навушники", 1, 1500)
+
+OrderProcessor.process_order(order)
